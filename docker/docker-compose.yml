@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  web:
+    container_name: ${REPOSITORY_NAME}_web
+    build:
+      context: ./web
+    image: ${REPOSITORY_NAME}_web:1.0.0
+    environment:
+      APPLICATION_NAME:
+      TZ: "Asia/Tokyo"
+    ports:
+      - "80:80"
+    volumes:
+      - "./config/apache/httpd-vhosts.conf:/etc/apache2/sites-enabled/${REPOSITORY_NAME}.conf"
+      - "./config/php/php.ini.${REPOSITORY_NAME}:/usr/local/etc/php/conf.d/${REPOSITORY_NAME}.ini"
+      - "../:/var/www/${APPLICATION_NAME}"
+  db:
+    container_name: ${REPOSITORY_NAME}_db
+    build:
+      context: ./db
+    image: ${REPOSITORY_NAME}_db:1.0.0
+    command: >-
+      /entrypoint.sh mysqld
+        --slow_query_log=1
+        --long_query_time=2
+        --slow_query_log_file=/var/log/mysql/slow.log
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: root
+      TZ: "Asia/Tokyo"
+    ports:
+      - "3306:3306"
+    volumes:
+      - "../${REPOSITORY_NAME}/module/Application/scripts/db:/docker-entrypoint-initdb.d"
+      - data:/var/lib/mysql
+  mailcatcher:
+    image: yappabe/mailcatcher
+    ports:
+        - 1025:1025
+        - 1080:1080
+
+volumes:
+  data: {}
