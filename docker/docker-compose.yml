@@ -27,7 +27,7 @@ services:
         --slow_query_log_file=/var/log/mysql/slow.log
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: root
+      MYSQL_DATABASE: zf2sample
       TZ: "Asia/Tokyo"
     ports:
       - "3306:3306"
