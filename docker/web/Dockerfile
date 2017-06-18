@@ -1,25 +1,16 @@
-FROM php:5.6.27-apache
+FROM centos:latest
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    libicu-dev \
-    wget \
-    vim \
-    locales && \
-    rm -r /var/lib/apt/lists/* && \
-    echo "ja_JP.UTF-8 UTF-8" >> /etc/locale.gen && \
-    locale-gen ja_JP.UTF-8
-ENV LC_ALL ja_JP.UTF-8
+# Install & Add repo
+RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+RUN rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
 
-RUN a2enmod rewrite
-# Composerのインストール
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# Install PHP5.6 & Apache
+RUN yum --enablerepo=remi-php56 install php php-devel php-gd php-xml php-mbstring php-opcache php-mcrypt php-mysqlnd -y
 
-# PHP Unitをインストール
-RUN wget https://phar.phpunit.de/phpunit.phar && \
-    chmod +x phpunit.phar && \
-    mv phpunit.phar /usr/local/bin/phpunit
+# Clear yum cache
+RUN yum clean all
 
-# PHPの拡張モジュールをインストール
-RUN docker-php-ext-install mbstring mysql pdo_mysql intl
+# for web
+EXPOSE 80
 
+CMD /usr/sbin/httpd -DFOREGROUND
