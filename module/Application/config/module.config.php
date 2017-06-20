@@ -24,15 +24,24 @@ return array(
             // new controllers and actions without needing to create a new
             // module. Simply drop new controllers in, and you can access them
             // using the path /application/:controller/:action
-            'regist' => array(
-                'type'    => 'Segment',
+            'member' => array(
+                'type'    => 'Literal',
                 'options' => array(
-                    'route'    => '/regist[/:action[/:cvid]][/]',
-                    'defaults' => array(
-                        'controller'    => 'Application\Controller\Regist',
-                        'action'        => 'input',
-                    ),
+                    'route'    => '/member'
                 ),
+                'may_terminate' => false,
+                'child_routes' => [
+                    'regist' => [
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/regist[/:action[/:cvid]][/]',
+                            'defaults' => array(
+                                'controller'    => 'Application\Controller\Regist',
+                                'action'        => 'input',
+                            ),
+                        ),
+                    ],
+                ],
             ),
         ),
     ),
@@ -61,6 +70,11 @@ return array(
             'Application\Controller\Regist' => 'Application\Controller\RegistController'
         ),
     ),
+    'input_filters' => [
+        'invokables' => [
+            'Regist/RegistInputFilter' => 'Application\Input\Regist\RegistInputFilter',
+        ],
+    ],
     'view_manager' => array(
         'display_not_found_reason' => true,
         'display_exceptions'       => true,
