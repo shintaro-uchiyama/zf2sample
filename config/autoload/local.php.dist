@@ -12,4 +12,29 @@
  */
 
 return array(
+    'db' => [
+        'driver' => 'Pdo_Mysql',
+        'database' => 'zf2sample',
+        'username' => 'root',
+        'password' => 'root',
+        'hostname' => 'db',
+        'port' => 3306,
+        'charset' => 'utf8',
+        'options' => [
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
+        ],
+        'profiler' => true,
+    ],
+    'service_manager' => [
+       'factories' => array (
+           'AppicationLogger' => function ($sm) {
+                $logger = new Zend\Log\Logger ();
+                $filter = new Zend\Log\Filter\Priority ( Zend\Log\Logger::DEBUG );
+                $writer = new Zend\Log\Writer\Stream ( __DIR__ . '/../../logs/app.log.' . date ( 'Ymd' ) );
+                $writer->addFilter ( $filter );
+                $logger->addWriter ( $writer );
+                return $logger;
+            }
+        )
+    ],
 );
