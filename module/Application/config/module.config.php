@@ -36,7 +36,7 @@ return array(
                         'options' => array(
                             'route'    => '/regist[/:action[/:cvid]][/]',
                             'defaults' => array(
-                                'controller'    => 'Application\Controller\Regist',
+                                'controller'    => 'Application\Controller\Member\Regist',
                                 'action'        => 'input',
                             ),
                         ),
@@ -67,7 +67,7 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
-            'Application\Controller\Regist' => 'Application\Controller\RegistController'
+            'Application\Controller\Member\Regist' => 'Application\Controller\Member\RegistController'
         ),
     ),
     'input_filters' => [

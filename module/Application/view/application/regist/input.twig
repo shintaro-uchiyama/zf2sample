@@ -9,5 +9,17 @@
 
 <div class="row">
     <h2>input</h2>
+    <form action="{{ url('member/regist', {action:'confirm'}, {query: query}) }}" method='post'>
+        <table border="0">
+            <tr>
+                <td align="right"><b> id：</b></td>
+                <td><input type='text' name="{{ inputs.login_id.name }}"></input></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="送信"></td>
+             </tr>
+        </table>
+    </form>
 </div>
 {% endblock content %}
