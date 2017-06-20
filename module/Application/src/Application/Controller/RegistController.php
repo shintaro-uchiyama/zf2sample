@@ -20,6 +20,7 @@ class RegistController extends AbstractActionController
      */
     public function inputAction()
     {
+        $this->getServiceLocator()->get('AppicationLogger')->info('Something...');
         return new ViewModel();
     }
 

@@ -13,7 +13,7 @@ services:
       - "80:80"
     volumes:
       - "./config/apache/httpd-vhosts.conf:/etc/httpd/conf.d/${REPOSITORY_NAME}.conf"
-      - "./config/php/php.${REPOSITORY_NAME}.ini:/etc/php.d/${REPOSITORY_NAME}.ini"
+      - "./config/php/php.ini:/etc/php.d/${REPOSITORY_NAME}.ini"
       - "../:/var/www/${APPLICATION_NAME}"
   db:
     container_name: ${REPOSITORY_NAME}_db
