@@ -50,6 +50,9 @@ return array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
             'Zend\Log\LoggerAbstractServiceFactory',
         ),
+        'factories' => array(
+            'SessionManager' => '\Zend\Session\Service\SessionManagerFactory',
+        ),
         'aliases' => array(
             'translator' => 'MvcTranslator',
         ),
@@ -97,5 +100,20 @@ return array(
             'routes' => array(
             ),
         ),
+    ),
+    'session' => array(
+        'config' => array(
+            'class'   => '\Zend\Session\Config\SessionConfig',
+                'options' => array(
+                    'name'                => 'zf2s',
+                    'remember_me_seconds' => 86400,
+            ),
+        ),
+        // セッションの管理方法を指定する.
+        // デフォルトは\Zend\Session\Storage\SessionArrayStorage.
+        'storage' => '\Zend\Session\Storage\SessionArrayStorage',
+        // デフォルトのSession Container Managerとして利用する.
+        // デフォルトの値はtrue.
+        // 'enable_default_container_manager' => false
     ),
 );

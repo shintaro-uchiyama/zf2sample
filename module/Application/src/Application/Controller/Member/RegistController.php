@@ -12,6 +12,7 @@ namespace Application\Controller\Member;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\InputFilter\Factory;
+use Zend\Session\Container;
 
 class RegistController extends AbstractActionController
 {
@@ -26,6 +27,11 @@ class RegistController extends AbstractActionController
     {
         $inputs = $this->createInputFilter();
 
+        // sessionManagerとともにcontainerを生成
+        $sessionManager = $this->getSessionManager();
+        $container = new Container('userStateContainer', $sessionManager);
+        $container->page = '333';
+
         $viewModel = new ViewModel();
         $viewModel->setVariables(['inputs' => $inputs->getInputs()]);
         return $viewModel;
@@ -37,6 +43,11 @@ class RegistController extends AbstractActionController
      */
     public function confirmAction()
     {
+        // sessionManagerとともにcontainerを生成
+        $sessionManager = $this->getSessionManager();
+        $container = new Container('userStateContainer', $sessionManager);
+        var_dump($sessionManager->getId(), $container->page);
+
         $inputs = $this->createInputFilter();
         $inputs->setData($this->params()->fromPost());
 
@@ -87,5 +98,13 @@ class RegistController extends AbstractActionController
             ),
         ));
         return $inputs;
+    }
+
+    /**
+     * @return SessionManager
+     */
+    private function getSessionManager()
+    {
+        return $this->getServiceLocator()->get('SessionManager');
     }
 }
