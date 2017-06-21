@@ -27,10 +27,11 @@ class RegistController extends AbstractActionController
     {
         $inputs = $this->createInputFilter();
 
-        // sessionManagerとともにcontainerを生成
+        /* sessionを使うとき用
         $sessionManager = $this->getSessionManager();
         $container = new Container('userStateContainer', $sessionManager);
         $container->page = '333';
+         */
 
         $viewModel = new ViewModel();
         $viewModel->setVariables(['inputs' => $inputs->getInputs()]);
@@ -43,17 +44,22 @@ class RegistController extends AbstractActionController
      */
     public function confirmAction()
     {
-        // sessionManagerとともにcontainerを生成
+        /* sessionを使うとき用
         $sessionManager = $this->getSessionManager();
         $container = new Container('userStateContainer', $sessionManager);
         var_dump($sessionManager->getId(), $container->page);
+         */
 
         $inputs = $this->createInputFilter();
         $inputs->setData($this->params()->fromPost());
 
-        $viewModel = new ViewModel();
-        $viewModel->setVariables(['inputs' => $inputs->getInputs()]);
-        return $viewModel;
+        if ($inputs->isValid()) {
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(['inputs' => $inputs->getInputs()]);
+            return $viewModel;
+        } else {
+            var_dump($inputs->getMessages());exit;
+        }
     }
 
      /**
@@ -79,24 +85,9 @@ class RegistController extends AbstractActionController
      */
     private function createInputFilter()
     {
+        $spec = $this->getRegistService()->getInputSpec();
         $factory = new Factory();
-        $inputs = $factory->createInputFilter(array(
-            'login_id' => array(
-                'name'       => 'login_id',
-                'required'   => true,
-                'validators' => array(
-                    array(
-                        'name' => 'not_empty',
-                    ),
-                    array(
-                        'name' => 'string_length',
-                        'options' => array(
-                            'min' => 4
-                        ),
-                    ),
-                ),
-            ),
-        ));
+        $inputs = $factory->createInputFilter($spec);
         return $inputs;
     }
 
@@ -106,5 +97,13 @@ class RegistController extends AbstractActionController
     private function getSessionManager()
     {
         return $this->getServiceLocator()->get('SessionManager');
+    }
+
+    /**
+     * @return SessionManager
+     */
+    private function getRegistService()
+    {
+        return $this->getServiceLocator()->get('RegistService');
     }
 }

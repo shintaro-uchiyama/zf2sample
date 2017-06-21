@@ -5,7 +5,7 @@ RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.
 RUN rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
 
 # Install PHP5.6 & Apache
-RUN yum --enablerepo=remi-php56 install php php-devel php-gd php-xml php-mbstring php-opcache php-mcrypt php-mysqlnd -y
+RUN yum --enablerepo=remi-php56 install php php-devel php-gd php-xml php-mbstring php-opcache php-mcrypt php-mysqlnd php-intl -y
 
 # Clear yum cache
 RUN yum clean all

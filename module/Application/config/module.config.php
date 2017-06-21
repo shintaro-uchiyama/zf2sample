@@ -50,6 +50,9 @@ return array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
             'Zend\Log\LoggerAbstractServiceFactory',
         ),
+        'invokables' => [
+            'RegistService' => \Application\Model\Member\Regist\RegistService::class,
+        ],
         'factories' => array(
             'SessionManager' => '\Zend\Session\Service\SessionManagerFactory',
         ),
