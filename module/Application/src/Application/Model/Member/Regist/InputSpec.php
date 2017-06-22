@@ -7,6 +7,7 @@ use Zend\InputFilter\Input;
 use Zend\Filter\StringTrim;
 use Zend\I18n\Validator\Alnum;
 use Zend\Validator\StringLength;
+use Zend\Validator\Date;
 
 /**
  * 会員登録フォームの仕様
@@ -24,7 +25,7 @@ class InputSpec implements InputFilterProviderInterface
     {
         return [
             $this->loginId(),
-            //$this->password(),
+            $this->birthDay(),
         ];
     }
 
@@ -51,4 +52,13 @@ class InputSpec implements InputFilterProviderInterface
         return $input;
     }
 
+    public function birthDay()
+    {
+        $input = new Input('birth_day');
+
+        $input->getValidatorChain()
+            ->attach(new Date());
+            
+        return $input;
+    }
 }

@@ -11,12 +11,19 @@ namespace Application;
 
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
+use Zend\Db\Adapter\AdapterInterface;
+use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 
 class Module
 {
     public function onBootstrap(MvcEvent $e)
     {
-        $eventManager        = $e->getApplication()->getEventManager();
+        $eventManager = $e->getApplication()->getEventManager();
+        $serviceManager = $e->getApplication()->getServiceManager();
+        /** @var AdapterInterface $adapter */
+        $adapter = $serviceManager->get(AdapterInterface::class);
+        GlobalAdapterFeature::setStaticAdapter($adapter);
+
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
     }

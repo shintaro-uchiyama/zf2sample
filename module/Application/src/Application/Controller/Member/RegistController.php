@@ -16,8 +16,9 @@ use Zend\Session\Container;
 
 class RegistController extends AbstractActionController
 {
-
-     const INPUT_FILTER_MEMBER_REGIST = 'Regist/RegistInputFilter';
+    const VIEW_INPUT = 'member/regist/input';
+    const VIEW_CONFIRM = 'confirm/';
+    const INPUT_FILTER_MEMBER_REGIST = 'Regist/RegistInputFilter';
 
      /**
      * 入力画面表示
@@ -33,8 +34,15 @@ class RegistController extends AbstractActionController
         $container->page = '333';
          */
 
+        // cvid発行
+        $cvid = bin2hex(openssl_random_pseudo_bytes(16));
+
         $viewModel = new ViewModel();
-        $viewModel->setVariables(['inputs' => $inputs->getInputs()]);
+        $viewModel->setTemplate();
+        $viewModel->setVariables([
+            'inputs' => $inputs->getInputs(),
+            'cvid' => $cvid,
+        ]);
         return $viewModel;
     }
 
@@ -51,7 +59,13 @@ class RegistController extends AbstractActionController
          */
 
         $inputs = $this->createInputFilter();
-        $inputs->setData($this->params()->fromPost());
+        $postData = $this->params()->fromPost();
+        $inputs->setData($postData);
+
+        // conversationTableに格納
+        $cvid = $this->params()->fromRoute('cvid');
+        $postData = array_merge($postData, ['cvid' => $cvid]);
+        $this->getConversationService()->save($postData);
 
         if ($inputs->isValid()) {
             $viewModel = new ViewModel();
@@ -59,6 +73,7 @@ class RegistController extends AbstractActionController
             return $viewModel;
         } else {
             var_dump($inputs->getMessages());exit;
+//            return $this->redirect()->toUrl('/member/regist/input');
         }
     }
 
@@ -100,10 +115,18 @@ class RegistController extends AbstractActionController
     }
 
     /**
-     * @return SessionManager
+     * @return RegistService
      */
     private function getRegistService()
     {
         return $this->getServiceLocator()->get('RegistService');
+    }
+
+    /**
+     * @return ConversationService
+     */
+    private function getConversationService()
+    {
+        return $this->getServiceLocator()->get('ConversationService');
     }
 }

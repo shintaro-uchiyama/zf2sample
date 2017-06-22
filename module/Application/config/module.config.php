@@ -52,8 +52,11 @@ return array(
         ),
         'invokables' => [
             'RegistService' => \Application\Model\Member\Regist\RegistService::class,
+            'ConversationService' => \Application\Model\ConversationService::class,
+            'ConversationTable' => \Application\Resource\Db\ConversationTable::class,
         ],
         'factories' => array(
+            \Zend\Db\Adapter\AdapterInterface::class => \Zend\Db\Adapter\AdapterServiceFactory::class,
             'SessionManager' => '\Zend\Session\Service\SessionManagerFactory',
         ),
         'aliases' => array(

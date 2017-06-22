@@ -9,11 +9,15 @@
 
 <div class="row">
     <h2>input</h2>
-    <form action="{{ url('member/regist', {action:'confirm'}, {query: query}) }}" method='post'>
+    <form action="{{ url('member/regist', {action:'confirm'}, {cvid: cvid}) }}" method='post'>
         <table border="0">
             <tr>
                 <td align="right"><b> id：</b></td>
                 <td><input type='text' name="{{ inputs.login_id.name }}"></input></td>
+            </tr>
+            <tr>
+                <td align="right"><b> birth day：</b></td>
+                <td><input type='date' name="{{ inputs.birth_day.name }}"></input></td>
             </tr>
             <tr>
                 <td></td>
