@@ -9,15 +9,15 @@
 
 <div class="row">
     <h2>confirm</h2>
-    <form action="{{ url('member/regist', {action:'prov_complete'}, {query: query}) }}" method='post'>
+    <form action="{{ url('member/regist', {action:'prov_complete', 'cvid': cvid}) }}" method='post'>
         <table border="0">
             <tr>
-                <td align="right"><b> id：</b></td>
-                <td>{{ inputs.login_id.rawValue }}</td>
+                <td align="right"><b> email_addr：</b></td>
+                <td>{{ inputs.mail_address.rawValue }}</td>
             </tr>
             <tr>
-                <td align="right"><b> birth day：</b></td>
-                <td>{{ inputs.birth_day.rawValue }}</td>
+                <td align="right"><b> password：</b></td>
+                <td>{{ inputs.password.rawValue }}</td>
             <tr>
                 <td><a  href="{{url('member/regist', {action:'input', 'cvid': cvid}) }}">戻る</a></td>
                 <td><input type="submit" value="登録"></td>

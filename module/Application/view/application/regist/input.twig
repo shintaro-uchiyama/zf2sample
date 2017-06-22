@@ -15,25 +15,25 @@
     <form action="{{ url('member/regist', {'action':'confirm', 'cvid': cvid}) }}" method='post'>
         <table border="0">
             <tr>
-                <td align="right"><b> id：</b></td>
-                <td><input type='text' name="{{ inputs.login_id.name }}" value="{{ inputs.login_id.rawValue}}"></input></td>
+                <td align="right"><b> mail_addr：</b></td>
+                <td><input type='email' name="{{ inputs.mail_address.name }}" value="{{ inputs.mail_address.rawValue}}"></input></td>
             </tr>
             <tr>
                 <td></td>
-                  {% if inputs.login_id.messages is not empty %}
-                      {%  for message in inputs.login_id.messages %}
+                  {% if inputs.mail_address.messages is not empty %}
+                      {%  for message in inputs.mail_address.messages %}
                         <td><b>{{ message }}</b></td>
                       {% endfor %}
                   {% endif %}
             </tr>
             <tr>
-                <td align="right"><b> birth day：</b></td>
-                <td><input type='date' name="{{ inputs.birth_day.name }}" value="{{ inputs.birth_day.rawValue}}"></input></td>
+                <td align="right"><b> password：</b></td>
+                <td><input type='password' name="{{ inputs.password.name }}" value="{{ inputs.password.rawValue}}"></input></td>
             </tr>
             <tr>
                 <td></td>
-                  {% if inputs.birth_day.messages is not empty %}
-                      {%  for message in inputs.birth_day.messages %}
+                  {% if inputs.password.messages is not empty %}
+                      {%  for message in inputs.password.messages %}
                         <td><b>{{ message }}</b></td>
                       {% endfor %}
                   {% endif %}

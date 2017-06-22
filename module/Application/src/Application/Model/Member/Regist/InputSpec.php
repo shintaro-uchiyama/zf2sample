@@ -24,41 +24,42 @@ class InputSpec implements InputFilterProviderInterface
     public function getInputFilterSpecification()
     {
         return [
-            $this->loginId(),
-            $this->birthDay(),
+            $this->mailAddress(),
+            $this->password(),
         ];
     }
 
     /**
-     * ログインID
+     * mail_address
      * @return \Zend\InputFilter\InputInterface
      */
-    public function loginId()
+    public function mailAddress()
     {
-        $input = new Input('login_id');
+        $input = new Input('mail_address');
 
         $input->getFilterChain()
             ->attach(new StringTrim());
 
         $input->getValidatorChain()
-            ->attach(new StringLength(['max' => 4]))
-            ->attach(new Alnum());
+            ->attach(new StringLength(['min' => 4]));
 
-/*            ->attach(
-                Validators::callback(function ($id) {
-                    return !$this->service->loginIdExists($id);
-                })->setMessage('既に使用されています。')
-            );*/
+/*        $input->getValidatorChain()
+            ->attach(
+                Validators::callback(function ($value) {
+                    return !$this->service->mailAddressExists($value);
+                })
+                ->setMessage('既に使用されています。')
+            );
+ */
         return $input;
     }
 
-    public function birthDay()
+    public function password()
     {
-        $input = new Input('birth_day');
-
+        $input = new Input('password');
         $input->getValidatorChain()
-            ->attach(new Date());
-            
+            ->attach(new Alnum())
+            ->attach(new StringLength(['max' => 4]));
         return $input;
     }
 }
