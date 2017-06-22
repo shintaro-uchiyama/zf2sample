@@ -9,15 +9,34 @@
 
 <div class="row">
     <h2>input</h2>
-    <form action="{{ url('member/regist', {action:'confirm'}, {cvid: cvid}) }}" method='post'>
+    {% if (inputs.isValid is defined) and (inputs.isValid == false) %}
+        <h3>入力内容に不備があります。再度ご確認の上登録ください</h3>
+    {% endif %}
+    <form action="{{ url('member/regist', {'action':'confirm', 'cvid': cvid}) }}" method='post'>
         <table border="0">
             <tr>
                 <td align="right"><b> id：</b></td>
-                <td><input type='text' name="{{ inputs.login_id.name }}"></input></td>
+                <td><input type='text' name="{{ inputs.login_id.name }}" value="{{ inputs.login_id.rawValue}}"></input></td>
+            </tr>
+            <tr>
+                <td></td>
+                  {% if inputs.login_id.messages is not empty %}
+                      {%  for message in inputs.login_id.messages %}
+                        <td><b>{{ message }}</b></td>
+                      {% endfor %}
+                  {% endif %}
             </tr>
             <tr>
                 <td align="right"><b> birth day：</b></td>
-                <td><input type='date' name="{{ inputs.birth_day.name }}"></input></td>
+                <td><input type='date' name="{{ inputs.birth_day.name }}" value="{{ inputs.birth_day.rawValue}}"></input></td>
+            </tr>
+            <tr>
+                <td></td>
+                  {% if inputs.birth_day.messages is not empty %}
+                      {%  for message in inputs.birth_day.messages %}
+                        <td><b>{{ message }}</b></td>
+                      {% endfor %}
+                  {% endif %}
             </tr>
             <tr>
                 <td></td>

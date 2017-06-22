@@ -8,6 +8,8 @@ use Zend\Db\TableGateway\Feature;
 class ConversationTable extends AbstractTableGateway
 {
 
+    const EXPIRE_DATE = '1 hour';
+
     public function __construct()
     {
          $this->table = 'conversation';
@@ -30,11 +32,31 @@ class ConversationTable extends AbstractTableGateway
      * Conversationデータを保存する
      * @param array $row 行データ,
      */
-    public function save($row)
+    public function save($row, $cvid)
     {
-        var_dump($row);exit;
-        $this->delete(['id' => $row['id']]);
-        $this->insert($row);
+        $exdt = date("Y-m-d H:i:s",strtotime(self::EXPIRE_DATE));
+
+        $values = array(
+            'id' => $cvid,
+            'data' => $row,
+            'expired_at' => $exdt,
+        );
+        $result = $this->insert($values);
+        return $result;
+    }
+
+    public function updateCvdata($row, $cvid)
+    {
+        $exdt = date("Y-m-d H:i:s",strtotime(self::EXPIRE_DATE));
+        $values = array(
+            'data' => $row,
+            'expired_at' => $exdt,
+        );
+        $where= array(
+            'id' => $cvid,
+        );
+        $result = $this->update($values, $where);
+        return $result;
     }
 }
 

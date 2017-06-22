@@ -16,7 +16,7 @@ use Zend\Session\Container;
 
 class RegistController extends AbstractActionController
 {
-    const VIEW_INPUT = 'member/regist/input';
+    const VIEW_INPUT = '/member/regist/input/';
     const VIEW_CONFIRM = 'confirm/';
     const INPUT_FILTER_MEMBER_REGIST = 'Regist/RegistInputFilter';
 
@@ -27,20 +27,27 @@ class RegistController extends AbstractActionController
     public function inputAction()
     {
         $inputs = $this->createInputFilter();
+        $form = [];
 
-        /* sessionを使うとき用
-        $sessionManager = $this->getSessionManager();
-        $container = new Container('userStateContainer', $sessionManager);
-        $container->page = '333';
-         */
+        // conversationTableに格納
+        $cvid = $this->params()->fromRoute('cvid');
+        // 初期表示
+        if (is_null($cvid)) {
+            // cvid発行
+            $cvid = bin2hex(openssl_random_pseudo_bytes(16));
+        } else {
+            // 完了からの戻り
+            $cvData = $this->getConversationService()->get($cvid);
+            $inputs->setData($cvData);
+            
+            $form['isValid'] = $inputs->isValid() ? true : false;
+        }
 
-        // cvid発行
-        $cvid = bin2hex(openssl_random_pseudo_bytes(16));
+        $form = array_merge($form, $inputs->getInputs());
 
         $viewModel = new ViewModel();
-        $viewModel->setTemplate();
         $viewModel->setVariables([
-            'inputs' => $inputs->getInputs(),
+            'inputs' => $form,
             'cvid' => $cvid,
         ]);
         return $viewModel;
@@ -52,28 +59,23 @@ class RegistController extends AbstractActionController
      */
     public function confirmAction()
     {
-        /* sessionを使うとき用
-        $sessionManager = $this->getSessionManager();
-        $container = new Container('userStateContainer', $sessionManager);
-        var_dump($sessionManager->getId(), $container->page);
-         */
-
         $inputs = $this->createInputFilter();
         $postData = $this->params()->fromPost();
         $inputs->setData($postData);
 
         // conversationTableに格納
         $cvid = $this->params()->fromRoute('cvid');
-        $postData = array_merge($postData, ['cvid' => $cvid]);
-        $this->getConversationService()->save($postData);
+        $this->getConversationService()->set($postData, $cvid);
 
         if ($inputs->isValid()) {
             $viewModel = new ViewModel();
-            $viewModel->setVariables(['inputs' => $inputs->getInputs()]);
+            $viewModel->setVariables([
+                'inputs' => $inputs->getInputs(),
+                'cvid' => $cvid,
+            ]);
             return $viewModel;
         } else {
-            var_dump($inputs->getMessages());exit;
-//            return $this->redirect()->toUrl('/member/regist/input');
+            return $this->redirect()->toUrl(self::VIEW_INPUT. $cvid);
         }
     }
 

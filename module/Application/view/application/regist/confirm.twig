@@ -19,7 +19,7 @@
                 <td align="right"><b> birth day：</b></td>
                 <td>{{ inputs.birth_day.rawValue }}</td>
             <tr>
-                <td></td>
+                <td><a  href="{{url('member/regist', {action:'input', 'cvid': cvid}) }}">戻る</a></td>
                 <td><input type="submit" value="登録"></td>
              </tr>
         </table>

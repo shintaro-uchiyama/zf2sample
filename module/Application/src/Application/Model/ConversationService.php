@@ -12,14 +12,22 @@ class ConversationService implements ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait;
 
-    public function save($postData)
+    public function set($postData, $cvid)
     {
         $conversationTable = $this->getConversationTable();
-        $conversationTable->save($postData);
+        $dataSerialize = serialize($postData);
+        if ($conversationTable->findById($cvid)) {
+            $conversationTable->updateCvdata($dataSerialize, $cvid);
+        } else {
+            $conversationTable->save($dataSerialize, $cvid);
+        }
     }
 
-    public function getData($id)
+    public function get($id)
     {
+        $conversationTable = $this->getConversationTable();
+        $dataSerialized = $conversationTable->findById($id); 
+        return unserialize($dataSerialized['data']);
     }
 
     private function getConversationTable()
